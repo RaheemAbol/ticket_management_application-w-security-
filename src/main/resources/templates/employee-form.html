@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Create or Edit Employee</title>
+</head>
+<body>
+<h1 th:text="${employee.id != null ? 'Edit Employee' : 'Create Employee'}"></h1>
+
+<form th:action="@{/employees/save}" th:object="${employee}" method="post">
+    <input type="hidden" th:field="*{id}" />
+
+    <label for="name">Name</label>
+    <input type="text" id="name" th:field="*{name}" required />
+
+    <label for="email">Email</label>
+    <input type="email" id="email" th:field="*{email}" required />
+
+    <label for="password">Password</label>
+    <input type="password" id="password" th:field="*{password}" required />
+
+    <label for="role">Role</label>
+    <select id="role" th:field="*{role}" required>
+        <option th:value="ADMIN">Admin</option>
+        <option th:value="EMPLOYEE">Employee</option>
+    </select>
+
+    <button type="submit">Save Employee</button>
+</form>
+
+<a th:href="@{/employees}">Back to Employee List</a>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin Task List</title>
+</head>
+<body>
+<h1>Task List (Admin)</h1>
+<a th:href="@{/tasks/new}">Create New Task</a>
+
+<br>
+<a th:href="@{/employees/new}">Create New Employee</a>
+
+<table>
+    <thead>
+    <tr>
+        <th>Title</th>
+        <th>Description</th>
+        <th>Status</th>
+        <th>Assigned Employee</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="task : ${tasks}">
+        <td th:text="${task.title}">Task Title</td>
+        <td th:text="${task.description}">Task Description</td>
+        <td th:text="${task.status}">Task Status</td>
+        <td th:text="${task.employee.name}">Assigned Employee</td>
+        <td>
+            <a th:href="@{/tasks/edit/{id}(id=${task.id})}">Edit</a>
+            <a th:href="@{/tasks/delete/{id}(id=${task.id})}">Delete</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

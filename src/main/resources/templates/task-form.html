@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create or Edit Task</title>
+</head>
+<body>
+
+<h1 th:text="${task != null && task.id != null ? 'Edit Task' : 'Create Task'}"></h1>
+
+<form th:action="@{/tasks/save}" th:object="${task}" method="post">
+    <!-- Bind to the task's ID field (hidden if creating a new task) -->
+    <input type="hidden" th:field="*{id}">
+
+    <label for="title">Title</label>
+    <input type="text" th:field="*{title}" id="title" required>
+
+    <label for="description">Description</label>
+    <textarea th:field="*{description}" id="description"></textarea>
+
+    <label for="employee">Assign to Employee</label>
+    <select th:field="*{employee.id}" id="employee" required>
+        <option th:each="employee : ${employees}" th:value="${employee.id}" th:text="${employee.name}"></option>
+    </select>
+
+    <label for="status">Status</label>
+    <select th:field="*{status}" id="status" required>
+        <option value="Pending">Pending</option>
+        <option value="In Progress">In Progress</option>
+        <option value="Review">Review</option>
+        <option value="Complete">Complete</option>
+    </select>
+
+    <button type="submit">Save Task</button>
+</form>
+
+<a th:href="@{/tasks}">Back to Task List</a>
+
+</body>
+</html>

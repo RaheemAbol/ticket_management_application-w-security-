@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Employee Task Hub</title>
+</head>
+<body>
+<h1>Task Hub for <span th:text="${employee.name}"></span></h1>
+
+<table>
+    <thead>
+    <tr>
+        <th>Title</th>
+        <th>Description</th>
+        <th>Status</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="task : ${tasks}">
+        <td th:text="${task.title}"></td>
+        <td th:text="${task.description}"></td>
+        <td th:text="${task.status}"></td>
+        <td>
+            <form th:action="@{/employees/tasks/update-status}" method="post">
+            <input type="hidden" name="taskId" th:value="${task.id}">
+                <select name="status">
+                    <option th:selected="${task.status == 'Pending'}" value="Pending">Pending</option>
+                    <option th:selected="${task.status == 'In Progress'}" value="In Progress">In Progress</option>
+                    <option th:selected="${task.status == 'Review'}" value="Review">Review</option>
+                    <option th:selected="${task.status == 'Complete'}" value="Complete">Complete</option>
+                </select>
+                <button type="submit">Update Status</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<a th:href="@{/tasks}">Back to Task List</a>
+</body>
+</html>

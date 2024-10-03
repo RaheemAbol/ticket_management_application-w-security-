@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Register</title>
+</head>
+<body>
+<h1>Register</h1>
+<!-- Thymeleaf registration form (register.html) -->
+<form th:action="@{/register}" th:object="${employee}" method="post">
+    <label for="name">Name:</label>
+    <input type="text" id="name" th:field="*{name}" required />
+
+    <label for="email">Email:</label>
+    <input type="email" id="email" th:field="*{email}" required />
+
+    <label for="password">Password:</label>
+    <input type="password" id="password" th:field="*{password}" required />
+
+    <!-- Optional: Let the user select the role (hidden if you want to set the role in backend) -->
+    <label for="role">Role:</label>
+    <select id="role" th:field="*{role}">
+        <option value="EMPLOYEE">Employee</option>
+        <option value="ADMIN">Admin</option>
+    </select>
+
+    <button type="submit">Register</button>
+</form>
+
+
+<!-- Link to the login page -->
+<a th:href="@{/login}">Already have an account? Login here</a>
+</body>
+</html>
