@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Upload Tasks CSV</title>
+</head>
+<body>
+<h1>Upload Tasks CSV</h1>
+
+<form th:action="@{/tasks/upload}" method="post" enctype="multipart/form-data">
+    <label for="file">Select CSV file:</label>
+    <input type="file" id="file" name="file" accept=".csv" required>
+    <button type="submit">Upload</button>
+</form>
+
+
+
+<a th:href="@{/tasks}">Back to Task List</a>
+</body>
+</html>

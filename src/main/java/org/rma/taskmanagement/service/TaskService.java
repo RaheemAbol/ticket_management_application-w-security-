@@ -30,6 +30,11 @@ public class TaskService {
         taskRepository.deleteById(id);
     }
 
+    public void saveTasks(List<Task> tasks) {
+        taskRepository.saveAll(tasks);
+
+    }
+
     public List<Task> getTasksByEmployee(Employee employee) {
         return taskRepository.findByEmployee(employee);
     }

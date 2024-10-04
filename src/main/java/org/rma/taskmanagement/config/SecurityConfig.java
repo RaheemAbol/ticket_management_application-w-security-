@@ -20,10 +20,10 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .authorizeRequests(authorizeRequests -> authorizeRequests
+                .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers("/css/**", "/js/**", "/images/**", "/login", "/register").permitAll()  // Public access
                         .requestMatchers("/employees/tasks/**").hasRole("EMPLOYEE")  // Employee task hub
-                        .requestMatchers("/employees/**").hasRole("ADMIN")  // Admin-only access for managing employees
+                        .requestMatchers("/employees/**", "/tasks/upload").hasRole("ADMIN")  // Admin access for managing employees and uploading tasks
                         .requestMatchers("/tasks/**").hasRole("ADMIN")  // Admin-only access for managing tasks
                         .anyRequest().authenticated())  // All other requests require authentication
 

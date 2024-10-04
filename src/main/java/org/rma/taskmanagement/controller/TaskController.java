@@ -8,8 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -62,5 +66,69 @@ public class TaskController {
         return "redirect:/tasks";  // Redirect back to task list
     }
 
+    // Display the CSV upload form
+    @GetMapping("/upload")
+    public String showUploadForm() {
+        return "task-upload";  // This will render the "task-upload.html" Thymeleaf view
+    }
 
+    // Handle the CSV file upload and parsing
+    @PostMapping("/upload")
+    public String uploadTasksCSV(@RequestParam("file") MultipartFile file, Model model) {
+        if (file.isEmpty()) {
+            model.addAttribute("error", "Please select a CSV file to upload.");
+            return "task-upload";
+        }
+
+        try {
+            List<Task> tasks = parseCSV(file);  // Parse the CSV file
+            taskService.saveTasks(tasks);  // Save the parsed tasks
+            model.addAttribute("success", "Tasks successfully uploaded.");
+        } catch (Exception e) {
+            model.addAttribute("error", "An error occurred while processing the CSV file.");
+            e.printStackTrace();
+        }
+
+        return "redirect:/tasks";  // Redirect to the task list view
+    }
+
+    // Helper method to parse the CSV file
+    private List<Task> parseCSV(MultipartFile file) throws Exception {
+        List<Task> tasks = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
+            String line;
+            boolean isFirstRow = true;
+
+            while ((line = reader.readLine()) != null) {
+                if (isFirstRow) {
+                    isFirstRow = false;  // Skip the header row
+                    continue;
+                }
+
+                String[] data = line.split(",");
+                if (data.length != 4) {
+                    throw new IllegalArgumentException("CSV file format is incorrect. Expected columns: title, description, employeeId, status.");
+                }
+
+                // Create a new task based on CSV data
+                Task task = new Task();
+                task.setTitle(data[0]);
+                task.setDescription(data[1]);
+
+                try {
+                    Long employeeId = Long.parseLong(data[2]);
+                    Employee employee = employeeService.getEmployeeById(employeeId);
+                    task.setEmployee(employee);
+                } catch (NumberFormatException e) {
+                    throw new IllegalArgumentException("Invalid employee ID format: " + data[2]);
+                }
+
+                task.setStatus(data[3]);
+                tasks.add(task);
+            }
+        }
+        return tasks;
+    }
 }
+
+
